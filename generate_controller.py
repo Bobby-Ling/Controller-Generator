@@ -1,13 +1,12 @@
 #!/bin/python3
 # Authored by Bobby Ling
 import re
-import textwrap
-from numpy import sign
 import openpyxl
+import sys
 
 # config
 
-signal_excel_path = "RISC-V单周期硬布线控制器表达式自动生成(2024-9-12)-RV32IM-FullOpcode.xlsx"
+signal_excel_path = "RISC-V单周期硬布线控制器表达式自动生成(2024-9-12)-RV32IM-FullOpcode.xlsx" if len(sys.argv)<=1 else sys.argv[1]
 module_template_path = "templates/ControllerTemplate.v"
 module_inst_template_path = "templates/ControllerInstTemplate.v"
 generated_module_name = "Controller"
