@@ -23,7 +23,7 @@ def signal_excel_parser(signal_excel_path:str):
     skip_cols = [27, 28, 33, 34, 35, 36]
     
     signals = [sheet[name_row][i].value for i in range(begin_col, end_col) if i not in skip_cols ]
-    signals = [re.sub(r"S([0-3])", r"AluOp[\1]", signal) for signal in signals]
+    signals = [re.sub(r"S([0-3])", r"AluOp_o[\1]", signal) for signal in signals]
     
     formulas = [sheet[formula_row][i].value for i in range(begin_col, end_col) if i not in skip_cols ]
     formulas = [re.sub(r"F(\d+)", r"F[\1] ", formula) for formula in formulas]
@@ -48,7 +48,7 @@ def generate(dry_run = True):
             io_define_gen:str = ""
             
             # module   /*placeholder{1}*/
-            assign_tmpl:str = "{0}assgin {1}_o = {2};\n"
+            assign_tmpl:str = "{0}assgin {1} = {2};\n"
             assign_gen:str = ""
             
             # inst          /*placeholder{0}*/
@@ -56,9 +56,9 @@ def generate(dry_run = True):
             inst_args_gen:str = ""
 
             for signal, formula in zip(signals, formulas):
-                io_define_gen += io_define_tmpl.format(TAB1, signal) if (re.match(r"AluOp\[[0-3]\]", signal) == None) else ""
-                assign_gen += assign_tmpl.format(TAB1, signal, formula)
-                inst_args_gen += inst_args_tmpl.format(TAB2, signal) if (re.match(r"AluOp\[[0-3]\]", signal) == None) else ""
+                io_define_gen += io_define_tmpl.format(TAB1, signal) if (re.match(r"AluOp_o\[[0-3]\]", signal) == None) else ""
+                assign_gen += assign_tmpl.format(TAB1, signal + ("_o" if (re.match(r"AluOp_o\[[0-3]\]", signal) == None) else ""), formula)
+                inst_args_gen += inst_args_tmpl.format(TAB2, signal) if (re.match(r"AluOp_o\[[0-3]\]", signal) == None) else ""
                 
             generated_module = module_template.format(io_define_gen[:-2], assign_gen + "\n")
             generated_inst = inst_template.format(inst_args_gen[:-2]) # remove last ','
