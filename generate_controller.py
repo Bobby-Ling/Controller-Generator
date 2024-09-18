@@ -1,5 +1,6 @@
 #!/bin/python3
 # Authored by Bobby Ling
+import os
 import re
 import openpyxl
 import sys
@@ -48,11 +49,11 @@ def generate(dry_run = True):
             io_define_gen:str = ""
             
             # module   /*placeholder{1}*/
-            assign_tmpl:str = "{0}assgin {1} = {2};\n"
+            assign_tmpl:str = "{0}assign {1} = {2};\n"
             assign_gen:str = ""
             
             # inst          /*placeholder{0}*/
-            inst_args_tmpl:str = "{0}.{1}_o(ID_{1}),\n"
+            inst_args_tmpl:str = "{0}.{1}_o(ID_{1}_w),\n"
             inst_args_gen:str = ""
 
             for signal, formula in zip(signals, formulas):
@@ -68,9 +69,9 @@ def generate(dry_run = True):
                 print(generated_inst)
             else:
                 gen_module_file.write(generated_module)
-                print(f"writing module to {gen_inst_module_path}")
+                print(f"writing module to {os.path.abspath(gen_inst_module_path)}")
                 gen_inst_module_file.write(generated_inst)
-                print(f"writing module to {gen_module_path}") 
+                print(f"writing module to {os.path.abspath(gen_module_path)}") 
                
 generate(dry_run=False)
 # generate()
